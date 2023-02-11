@@ -13,12 +13,21 @@ namespace ShiftLoggerConsole
         {
 
             ApiHelper.InitializeClient();
-            var users = ApiCaller.LoadUsers().GetAwaiter().GetResult();
-
-            foreach (var x in users)
+            foreach (var x in UserHelper.GetAll().GetAwaiter().GetResult())
             {
                 Console.WriteLine(x.Username);
             }
+            Console.WriteLine("before");
+
+            UserHelper.Update(1, new UserModel() {UserModelId = 1, Username = "Schimbat acu", Password = "nou" });
+
+
+            foreach (var x in UserHelper.GetAll().GetAwaiter().GetResult())
+            {
+                Console.WriteLine(x.Username);
+            }
+            Console.WriteLine("after");
+
         }
     }
 }
