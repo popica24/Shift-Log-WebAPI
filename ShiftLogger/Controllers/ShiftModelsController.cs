@@ -13,13 +13,13 @@ namespace ShiftLogger.Controllers
     [ApiController]
     public class ShiftModelsController : ControllerBase
     {
-        private readonly ShiftContext _context; 
+        private readonly ShiftContext _context;
 
         public ShiftModelsController(ShiftContext context) => _context = context;
 
         [HttpGet]
-        public async Task<IEnumerable<ShiftModel>> Get()=> 
-            await _context.Shifts.ToListAsync();
+        public async Task<IEnumerable<ShiftModel>> Get() =>
+          await _context.Shifts.ToListAsync();
 
         [HttpGet("id")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -37,8 +37,11 @@ namespace ShiftLogger.Controllers
             await _context.AddAsync(shiftModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = shiftModel.ShiftModelId }, shiftModel);
-                
+            return CreatedAtAction(nameof(GetById), new
+            {
+                id = shiftModel.ShiftModelId
+            }, shiftModel);
+
         }
 
         [HttpPut("{id}")]
@@ -67,6 +70,6 @@ namespace ShiftLogger.Controllers
 
             return NoContent();
         }
-           
+
     }
 }

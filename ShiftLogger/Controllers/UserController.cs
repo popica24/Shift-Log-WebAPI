@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShiftLogger.Models;
-
+using ShiftLoggerAPI.Tools;
 namespace ShiftLogger.Controllers
 {
     [Route("api/[controller]")]
@@ -30,6 +30,8 @@ namespace ShiftLogger.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Create(UserModel userModel)
         {
+            if(_context.Users.Where(x=>x.Username==userModel.Username)==null)
+                return BadRequest("Username Exists");
             await _context.AddAsync(userModel);
             await _context.SaveChangesAsync();
 
@@ -60,6 +62,20 @@ namespace ShiftLogger.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] UserModel user)
+        {
+            String password = Password.Encrypt(user.Password);
+            var dbUser = _context.Users.Where(x => (x.Username == user.Username && x.Password == user.Password)).FirstOrDefault();
+            if(dbUser == null)
+            {
+                return BadRequest("Username or password is incorrect");
+            }
+            return Ok(dbUser);
+            
         }
 
     }
